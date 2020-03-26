@@ -26,18 +26,20 @@ SECRET_KEY = '!8)b7gat$f!28s@$_t58-gda7k&2-ethwx1zfu0gh*asc#mewj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://covi19.herokuapp.com/','localhost:3000']
+ALLOWED_HOSTS = ['https://covi19.herokuapp.com/','localhost:8000']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'api',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -119,4 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+TEMPLATE_DIRS = (
+                    os.path.join(os.path.dirname(__file__),'templates'),
+)
 django_heroku.settings(locals())
