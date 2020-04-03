@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import django_heroku
-
+import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print(BASE_DIR)
@@ -27,8 +27,7 @@ SECRET_KEY = '!8)b7gat$f!28s@$_t58-gda7k&2-ethwx1zfu0gh*asc#mewj'
 DEBUG = True
 
 ALLOWED_HOSTS = ['https://covi19.herokuapp.com/','localhost:8000']
-
-
+# os.environ['SCRAPY_SETTINGS_MODULE'] = 'covidscrap.settings'
 # Application definition
 
 INSTALLED_APPS = [

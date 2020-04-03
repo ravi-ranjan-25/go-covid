@@ -11,20 +11,34 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
-
+from scrapyd_api import ScrapydAPI
 # Create your views here.
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
+import covidscrap
+
+# scrapyd = ScrapydAPI('http://localhost:6800')
 
 
 def edit(request):
     st = request.GET.get('state')
-    conf = request.GET.get('confirmed')
+    conf = request.GET.get('confirmedindians')
+    conf1 = request.GET.get('confirmedinternational')
     hospital = request.GET.get('inhospital')
     death = request.GET.get('death')
+    cure = request.GET.get('recovered')
+    print(conf1)
 
     s = state.objects.get(name=st)
     
     if conf is not None:
-        s.confirmedCase = int(conf)
+        s.confirmedIndians = int(conf)
+    
+    if conf1 is not None:
+        s.confirmedInternationals = int(conf1)
+    
+    if cure is not None:
+        s.recovered = int(cure)
 
     if hospital is not None:
         s.inHospital = int(hospital)
@@ -54,3 +68,12 @@ def feed(request):
 
     return JsonResponse({'result':1})
 
+def crawl(request):
+
+    process = CrawlerProcess('covidscrap.settings')
+    process.crawl(gocovid)
+    process.start()
+
+    # task = scrapyd.schedule('default', 'covidscrap')
+
+    return JsonResponse({'result':1})

@@ -11,5 +11,6 @@ urlpatterns = [
     path('liststatedata',complainListView.as_view() , name = "Event"),
     path('feeddata',views.feed , name = "login"),
     path('edit',views.edit , name = "login"),
+    path('crawl',views.crawl , name = "login"),
    
 ]
