@@ -27,7 +27,7 @@ def edit(request):
     hospital = request.GET.get('inhospital')
     death = request.GET.get('death')
     cure = request.GET.get('recovered')
-    print(conf1)
+    
 
     s = state.objects.get(name=st)
     
@@ -38,7 +38,7 @@ def edit(request):
         s.confirmedInternationals = int(conf1)
     
     if cure is not None:
-        s.recovered = int(cure)
+        s.cured = int(cure)
 
     if hospital is not None:
         s.inHospital = int(hospital)
