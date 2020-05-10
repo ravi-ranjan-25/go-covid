@@ -88,7 +88,7 @@ def crawl(request):
         list['confirmed'] = str(tds[2].get_text())
         list['deaths'] = str(tds[4].get_text())
         list['cured'] = str(tds[3].get_text())
-        list['recovered'] = int(list['confirmed']) - int(list['deaths']) - int(list['cured']) 
+        list['active'] = int(list['confirmed']) - int(list['deaths']) - int(list['cured']) 
 
         item.append(list)    
 
