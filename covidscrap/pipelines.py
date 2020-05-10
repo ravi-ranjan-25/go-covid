@@ -7,10 +7,12 @@
 from api.models import state
 
 class CovidscrapPipeline(object):
+    
     def process_item(self, item, spider):
         a = state.objects.filter(name=item['name'])
 
         if(len(a)>0):
+            print(item)
             p=a[0]
             inhos = int(item['confirmedIndians']) + int(item['confirmedInternationals']) - int(item['deaths']) - int(item['cured'])
             p.confirmedIndians =  item['confirmedIndians']

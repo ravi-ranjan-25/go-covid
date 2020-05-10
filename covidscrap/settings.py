@@ -13,7 +13,7 @@ import sys
 import os
 import django
 # ------------ DJANGO SETTINGS ------------
-DJANGO_PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DJANGO_PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print(DJANGO_PROJECT_PATH)
 DJANGO_SETTINGS_MODULE = 'covid.settings'
 

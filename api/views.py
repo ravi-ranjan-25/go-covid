@@ -13,12 +13,12 @@ from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
 from scrapyd_api import ScrapydAPI
 # Create your views here.
-from scrapy.crawler import CrawlerProcess
+from scrapy.crawler import CrawlerRunner,CrawlerProcess
 from scrapy.utils.project import get_project_settings
-import covidscrap
-
+from covidscrap.spiders import gocovid
 # scrapyd = ScrapydAPI('http://localhost:6800')
-
+from bs4 import BeautifulSoup
+import requests
 
 def edit(request):
     st = request.GET.get('state')
@@ -69,11 +69,50 @@ def feed(request):
     return JsonResponse({'result':1})
 
 def crawl(request):
+    url = "https://www.mohfw.gov.in/"
+    req = requests.get(url)
+    soup = BeautifulSoup(req.content, 'html.parser')
+    
+# print(soup.prettify())
 
-    process = CrawlerProcess('covidscrap.settings')
-    process.crawl(gocovid)
-    process.start()
+    
+    trs = soup.find_all('tr')
+
+    item= []
+    
+    for tr in trs[1:-3]:
+        list = {}
+        tds = tr.find_all("td")
+        
+        list['name']=str(tds[1].get_text())
+        list['confirmed'] = str(tds[2].get_text())
+        list['deaths'] = str(tds[4].get_text())
+        list['cured'] = str(tds[3].get_text())
+        list['recovered'] = int(list['confirmed']) - int(list['deaths']) - int(list['cured']) 
+
+        item.append(list)    
+
+    # process = CrawlerRunner(get_project_settings())
+    
+    # process.crawl(gocovid.covidspider)
+    # # process.start()
 
     # task = scrapyd.schedule('default', 'covidscrap')
 
-    return JsonResponse({'result':1})
+    return JsonResponse({'result':item})
+
+def currentprices(request): 
+    html_resp = urlopen("https://www.mohfw.gov.in/") 
+    response = scrapy.http.HtmlResponse(html_resp) 
+    
+    for p in response.xpath('//*[@id="state-data"]/div/div/div/div/table/tbody/tr')[:-3]:
+            print(p)
+            item = stateItem()
+            item['confirmedInternationals'] = 0
+            item['name']=p.css('td::text')[1]
+            item['confirmedIndians'] = p.css('td::text')[2]
+            item['deaths'] = p.css('td::text')[4]
+            item['cured'] = p.css('td::text')[3]
+            print(item)
+            yield item
+    
