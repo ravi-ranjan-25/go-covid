@@ -80,10 +80,10 @@ def crawl(request):
 
     item= []
     
-    for tr in trs[1:-3]:
+    for tr in trs[1:-5]:
         list = {}
         tds = tr.find_all("td")
-        
+        print(tds)
         list['name']=str(tds[1].get_text())
         list['confirmed'] = str(tds[2].get_text())
         list['deaths'] = str(tds[4].get_text())
