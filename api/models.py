@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class state(models.Model):
     name = models.CharField(unique = False,max_length=256)
     confirmedIndians = models.IntegerField(unique = False,max_length=256,default=0)
-    confirmedInternationals = models.IntegerField(unique = False,max_length=256,default=0)
+    active = models.IntegerField(unique = False,max_length=256,default=0)
     inHospital = models.IntegerField(unique = False,max_length=256,default=0)
     deaths = models.IntegerField(unique = False,max_length=256,default=0)
     cured = models.IntegerField(unique = False,max_length=256,default=0)
