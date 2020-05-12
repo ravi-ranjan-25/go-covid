@@ -89,8 +89,19 @@ def crawl(request):
         list['deaths'] = str(tds[4].get_text())
         list['cured'] = str(tds[3].get_text())
         list['active'] = int(list['confirmed']) - int(list['deaths']) - int(list['cured']) 
-       
-       
+        z = state.objects.filter(name=list['name'])
+
+        if z == 0:
+            o = state(name=list['name'],confirmedIndians=list['confirmed'],active=list['active'],deaths=list['deaths'],cured=list['cured'])
+            o.save()
+        else:
+            z[0].name=list['name']
+            z[0].confirmedIndians=list['confirmed']
+            z[0].active=list['active']
+            z[0].deaths=list['deaths']
+            z[0].cured=list['cured']
+            z[0].save()
+
         item.append(list)    
 
     # process = CrawlerRunner(get_project_settings())
