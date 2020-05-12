@@ -91,7 +91,7 @@ def crawl(request):
         list['active'] = int(list['confirmed']) - int(list['deaths']) - int(list['cured']) 
         z = state.objects.filter(name=list['name'])
 
-        if z == 0:
+        if len(z) == 0:
             o = state(name=list['name'],confirmedIndians=list['confirmed'],active=list['active'],deaths=list['deaths'],cured=list['cured'])
             o.save()
         else:
