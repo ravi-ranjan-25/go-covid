@@ -12,5 +12,6 @@ urlpatterns = [
     path('feeddata',views.feed , name = "login"),
     path('edit',views.edit , name = "login"),
     path('crawl',views.crawl , name = "login"),
+    path('predict',views.predict1 , name = "login"),
    
 ]

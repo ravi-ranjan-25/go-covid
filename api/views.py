@@ -19,6 +19,13 @@ from covidscrap.spiders import gocovid
 # scrapyd = ScrapydAPI('http://localhost:6800')
 from bs4 import BeautifulSoup
 import requests
+import os
+import pickle
+import joblib
+import json
+import numpy as np 
+from sklearn import preprocessing 
+import pandas as pd
 
 def edit(request):
     st = request.GET.get('state')
@@ -128,3 +135,59 @@ def currentprices(request):
             print(item)
             yield item
     
+def Predict(unit):
+    try:
+        BASE_DIRS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        model_dir= os.path.join(BASE_DIRS,'api/covid_pred_model1.pkl')
+
+        mdl=joblib.load(model_dir)
+        
+        X=unit
+        X=np.array(unit)
+        # X=X.reshape(1,-1)
+        print(mdl)
+        y_pred=mdl.predict(X)
+        
+        newdf=pd.DataFrame(y_pred>0.58, columns=['RISK'])
+        return y_pred
+    except ValueError as e:
+        return (e.args[0])
+
+
+def ohevalue(df):
+    BASE_DIRS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    model_dir= os.path.join(BASE_DIRS,'api/covid_ohe1.pkl')
+    ohe_col = joblib.load(model_dir)
+    print(ohe_col)
+    print(11111111111111111111111111111111111111111)
+    cat_columns=['Age','Body Temp','Dry Cough','Tiredness','Chest Pain','Nasal Congestion','Runny Nose','Sore Throat','Diarrhea','Difficulty in Breathing','High Blood Pressure','Heart Problems','Diabetes','Current Smoker','Contact with a person with fever or cold in last few days']
+    df_processed = pd.get_dummies(df, columns=cat_columns)
+    print(df_processed['Dry Cough_1'].values[0])
+    
+    newdict={}
+    
+    for i in ohe_col:
+        if i in df_processed.columns:
+            d = df_processed[i].values
+            newdict[i]= d[0]
+            print(d)
+        else:
+    	    newdict[i]=0
+    
+    newdf=pd.DataFrame(newdict,index=[0])
+    print(newdf)
+    
+    return newdf
+
+
+
+def predict1(request):
+    myDict = (request.GET).dict()
+    df=pd.DataFrame(myDict, index=[0])
+    answer=Predict(ohevalue(df)).tolist()
+    # a = answer[0]
+    
+    for i in answer:
+        a = i 
+    return JsonResponse({'result':i})
+
